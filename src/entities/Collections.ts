@@ -13,7 +13,6 @@ export class Collection {
   }
 
   @PrimaryColumn()
-  @Column()
   id: string;
 
   @Column()
