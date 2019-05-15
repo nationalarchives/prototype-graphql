@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, ManyToOne } from "typeorm";
+import { Collection } from "./Collection";
 
-@Entity()
+@Entity("collection_files")
 export class CollectionFiles {
   public constructor(collectionsFiles?: CollectionFiles) {
     if (collectionsFiles) {
@@ -9,7 +10,7 @@ export class CollectionFiles {
       this.size = collectionsFiles.size;
       this.path = collectionsFiles.lastModifiedDate;
       this.lastModifiedDate = collectionsFiles.lastModifiedDate;
-      this.collectionId = collectionsFiles.collectionId;
+      this.collection = collectionsFiles.collection;
     }
   }
   @PrimaryColumn()
@@ -27,6 +28,6 @@ export class CollectionFiles {
   @Column({ name: "last_modified_date" })
   lastModifiedDate: string;
 
-  @Column({ name: "collection_id" })
-  collectionId: string;
+  @ManyToOne(_type => Collection, collection => collection.files)
+  collection?: Collection;
 }
