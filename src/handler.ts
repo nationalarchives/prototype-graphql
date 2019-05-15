@@ -1,14 +1,9 @@
-import { ApolloServer, gql } from "apollo-server-lambda";
+import { ApolloServer } from "apollo-server-lambda";
 import "reflect-metadata";
-import { createConnection, getRepository } from "typeorm";
-import { Collection } from "./entities/Collections";
+import { createConnection } from "typeorm";
 import { CollectionFiles } from "./entities/CollectionFiles";
-
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+import { Collection } from "./entities/Collection";
+import { schema } from "./schema";
 
 const setupConnection: () => Promise<void> = async () => {
   await createConnection({
@@ -23,35 +18,22 @@ const setupConnection: () => Promise<void> = async () => {
   });
 };
 
-const resolvers = {
-  Query: {
-    hello: async () => {
-      await setupConnection();
-      const collection: Collection = new Collection({
-        id: "cbcvbcvbvcbvc",
-        name: "name",
-        copyright: "asdasd",
-        closure: "asdasd",
-        legalStatus: "asdasd"
-      });
-      await getRepository(Collection).save(collection);
+const runHandler = (event, context, handler) =>
+  new Promise((resolve, reject) => {
+    const callback = (error, body) => (error ? reject(error) : resolve(body));
 
-      const collectionFiles: CollectionFiles = new CollectionFiles({
-        id: "asdasdasd",
-        checksum: "asdasd",
-        size: "asdasd",
-        path: "asdasdasd",
-        lastModifiedDate: "asdasdas",
-        collectionId: "asdasd"
-      });
-      await getRepository(CollectionFiles).save(collectionFiles);
-      return "OK";
-    }
-  }
+    handler(event, context, callback);
+  });
+
+const run = async (event, context) => {
+  await setupConnection();
+
+  const server = new ApolloServer({
+    schema
+  });
+  const handler = server.createHandler();
+  const response = await runHandler(event, context, handler);
+
+  return response;
 };
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers
-});
-exports.hello = server.createHandler();
+exports.tdr = run;
