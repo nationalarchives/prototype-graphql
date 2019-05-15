@@ -11,8 +11,8 @@ provider:
   runtime: nodejs8.10
 
 functions:
-  hello:
-    handler: src/handler.hello
+  tdr:
+    handler: src/handler.tdr
     events:
       - http:
           method: post
