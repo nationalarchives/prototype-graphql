@@ -1,0 +1,31 @@
+type TrdCollectionFiles {
+  id: String
+  checksum: String
+  size: String
+  path: String
+  lastModifiedDate: String
+}
+
+type TdrCollection {
+  id: String!
+  name: String!
+  copyright: String!
+  closure: String!
+  legalStatus: String!
+  files: [TrdCollectionFiles]
+}
+
+type TrdCollectionFilesInput {
+  id: String
+  checksum: String
+  size: String
+  path: String
+  lastModifiedDate: String
+}
+
+input TdrCollectionInput {
+  name: String!
+  copyright: String!
+  closure: String!
+  legalStatus: String!
+}
