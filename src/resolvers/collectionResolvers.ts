@@ -10,12 +10,12 @@ const collectionResolver: IResolvers = {
     }
   },
   Mutation: {
-    createCollection: async (_, args, _context): Promise<string> => {
+    createCollection: async (_, args, _context): Promise<Collection> => {
       const collection: Collection = await getRepository(Collection).save({
         id: uuid4(),
         ...args.collection
       });
-      return collection.id;
+      return collection;
     }
   }
 };

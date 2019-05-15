@@ -9,11 +9,17 @@ export type Scalars = {
 };
 
 export type Mutation = {
-  createCollection?: Maybe<Scalars["ID"]>;
+  createCollection?: Maybe<TdrCollection>;
+  updateFilesOnCollection?: Maybe<TdrCollectionFilesOutput>;
 };
 
 export type MutationCreateCollectionArgs = {
   collection?: Maybe<TdrCollectionInput>;
+};
+
+export type MutationUpdateFilesOnCollectionArgs = {
+  collectionId?: Maybe<Scalars["ID"]>;
+  files?: Maybe<Array<Maybe<TdrCollectionFilesInput>>>;
 };
 
 export type Query = {
@@ -30,7 +36,27 @@ export type TdrCollection = {
   copyright: Scalars["String"];
   closure: Scalars["String"];
   legalStatus: Scalars["String"];
-  files?: Maybe<Array<Maybe<TrdCollectionFiles>>>;
+  files?: Maybe<Array<Maybe<TdrCollectionFiles>>>;
+};
+
+export type TdrCollectionFiles = {
+  id?: Maybe<Scalars["String"]>;
+  checksum?: Maybe<Scalars["String"]>;
+  size?: Maybe<Scalars["String"]>;
+  path?: Maybe<Scalars["String"]>;
+  lastModifiedDate?: Maybe<Scalars["String"]>;
+};
+
+export type TdrCollectionFilesInput = {
+  id: Scalars["String"];
+  checksum: Scalars["String"];
+  size: Scalars["String"];
+  path: Scalars["String"];
+  lastModifiedDate: Scalars["String"];
+};
+
+export type TdrCollectionFilesOutput = {
+  files?: Maybe<Array<Maybe<TdrCollectionFiles>>>;
 };
 
 export type TdrCollectionInput = {
@@ -38,22 +64,6 @@ export type TdrCollectionInput = {
   copyright: Scalars["String"];
   closure: Scalars["String"];
   legalStatus: Scalars["String"];
-};
-
-export type TrdCollectionFiles = {
-  id?: Maybe<Scalars["String"]>;
-  checksum?: Maybe<Scalars["String"]>;
-  size?: Maybe<Scalars["String"]>;
-  path?: Maybe<Scalars["String"]>;
-  lastModifiedDate?: Maybe<Scalars["String"]>;
-};
-
-export type TrdCollectionFilesInput = {
-  id?: Maybe<Scalars["String"]>;
-  checksum?: Maybe<Scalars["String"]>;
-  size?: Maybe<Scalars["String"]>;
-  path?: Maybe<Scalars["String"]>;
-  lastModifiedDate?: Maybe<Scalars["String"]>;
 };
 import { IGraphQLContext } from "../context";
 
@@ -137,11 +147,12 @@ export type ResolversTypes = ResolversObject<{
   ID: Scalars["ID"];
   TdrCollection: TdrCollection;
   String: Scalars["String"];
-  TrdCollectionFiles: TrdCollectionFiles;
+  TdrCollectionFiles: TdrCollectionFiles;
   Mutation: {};
   TdrCollectionInput: TdrCollectionInput;
+  TdrCollectionFilesInput: TdrCollectionFilesInput;
+  TdrCollectionFilesOutput: TdrCollectionFilesOutput;
   Boolean: Scalars["Boolean"];
-  TrdCollectionFilesInput: TrdCollectionFilesInput;
 }>;
 
 export type MutationResolvers<
@@ -149,10 +160,16 @@ export type MutationResolvers<
   ParentType = ResolversTypes["Mutation"]
 > = ResolversObject<{
   createCollection?: Resolver<
-    Maybe<ResolversTypes["ID"]>,
+    Maybe<ResolversTypes["TdrCollection"]>,
     ParentType,
     ContextType,
     MutationCreateCollectionArgs
+  >;
+  updateFilesOnCollection?: Resolver<
+    Maybe<ResolversTypes["TdrCollectionFilesOutput"]>,
+    ParentType,
+    ContextType,
+    MutationUpdateFilesOnCollectionArgs
   >;
 }>;
 
@@ -178,15 +195,15 @@ export type TdrCollectionResolvers<
   closure?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   legalStatus?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   files?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["TrdCollectionFiles"]>>>,
+    Maybe<Array<Maybe<ResolversTypes["TdrCollectionFiles"]>>>,
     ParentType,
     ContextType
   >;
 }>;
 
-export type TrdCollectionFilesResolvers<
+export type TdrCollectionFilesResolvers<
   ContextType = IGraphQLContext,
-  ParentType = ResolversTypes["TrdCollectionFiles"]
+  ParentType = ResolversTypes["TdrCollectionFiles"]
 > = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   checksum?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
@@ -199,16 +216,12 @@ export type TrdCollectionFilesResolvers<
   >;
 }>;
 
-export type TrdCollectionFilesInputResolvers<
+export type TdrCollectionFilesOutputResolvers<
   ContextType = IGraphQLContext,
-  ParentType = ResolversTypes["TrdCollectionFilesInput"]
+  ParentType = ResolversTypes["TdrCollectionFilesOutput"]
 > = ResolversObject<{
-  id?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  checksum?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  size?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  path?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  lastModifiedDate?: Resolver<
-    Maybe<ResolversTypes["String"]>,
+  files?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["TdrCollectionFiles"]>>>,
     ParentType,
     ContextType
   >;
@@ -218,8 +231,8 @@ export type Resolvers<ContextType = IGraphQLContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   TdrCollection?: TdrCollectionResolvers<ContextType>;
-  TrdCollectionFiles?: TrdCollectionFilesResolvers<ContextType>;
-  TrdCollectionFilesInput?: TrdCollectionFilesInputResolvers<ContextType>;
+  TdrCollectionFiles?: TdrCollectionFilesResolvers<ContextType>;
+  TdrCollectionFilesOutput?: TdrCollectionFilesOutputResolvers<ContextType>;
 }>;
 
 /**

@@ -1,4 +1,4 @@
-type TrdCollectionFiles {
+type TdrCollectionFiles {
   id: String
   checksum: String
   size: String
@@ -12,15 +12,19 @@ type TdrCollection {
   copyright: String!
   closure: String!
   legalStatus: String!
-  files: [TrdCollectionFiles]
+  files: [TdrCollectionFiles]
 }
 
-type TrdCollectionFilesInput {
-  id: String
-  checksum: String
-  size: String
-  path: String
-  lastModifiedDate: String
+input TdrCollectionFilesInput {
+  id: String!
+  checksum: String!
+  size: String!
+  path: String!
+  lastModifiedDate: String!
+}
+
+type TdrCollectionFilesOutput {
+  files: [TdrCollectionFiles]
 }
 
 input TdrCollectionInput {

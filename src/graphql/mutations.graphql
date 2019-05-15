@@ -1,3 +1,7 @@
 type Mutation {
-  createCollection(collection: TdrCollectionInput): ID
+  createCollection(collection: TdrCollectionInput): TdrCollection
+  updateFilesOnCollection(
+    collectionId: ID
+    files: [TdrCollectionFilesInput]
+  ): TdrCollectionFilesOutput
 }

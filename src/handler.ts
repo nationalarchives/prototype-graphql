@@ -8,10 +8,10 @@ import { schema } from "./schema";
 const setupConnection: () => Promise<void> = async () => {
   await createConnection({
     type: "mysql",
-    host: "127.0.0.1",
+    host: process.env.MYSQL_HOST,
     port: 3306,
-    username: "root",
-    password: "password",
+    username: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
     database: "tdr",
     synchronize: true,
     entities: [Collection, CollectionFiles]
@@ -31,7 +31,12 @@ const run = async (event, context) => {
   const server = new ApolloServer({
     schema
   });
-  const handler = server.createHandler();
+  const handler = server.createHandler({
+    cors: {
+      origin: "*",
+      credentials: true
+    }
+  });
   const response = await runHandler(event, context, handler);
 
   return response;
