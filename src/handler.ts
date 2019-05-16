@@ -8,10 +8,10 @@ import { schema } from "./schema";
 const setupConnection: () => Promise<void> = async () => {
   await createConnection({
     type: "mysql",
-    host: process.env.MYSQL_HOST,
+    host: process.env.REACT_APP_MYSQL_HOST,
     port: 3306,
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
+    username: process.env.REACT_APP_MYSQL_USER,
+    password: process.env.REACT_APP_MYSQL_PASSWORD,
     database: "tdr",
     synchronize: true,
     entities: [Collection, CollectionFiles]
