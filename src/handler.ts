@@ -1,21 +1,23 @@
 import { ApolloServer } from "apollo-server-lambda";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { createConnection, getConnectionManager } from "typeorm";
 import { CollectionFiles } from "./entities/CollectionFiles";
 import { Collection } from "./entities/Collection";
 import { schema } from "./schema";
 
 const setupConnection: () => Promise<void> = async () => {
-  await createConnection({
-    type: "mysql",
-    host: process.env.REACT_APP_MYSQL_HOST,
-    port: 3306,
-    username: process.env.REACT_APP_MYSQL_USER,
-    password: process.env.REACT_APP_MYSQL_PASSWORD,
-    database: "tdr",
-    synchronize: true,
-    entities: [Collection, CollectionFiles]
-  });
+  if (getConnectionManager().connections.length === 0) {
+    await createConnection({
+      type: "mysql",
+      host: process.env.REACT_APP_MYSQL_HOST,
+      port: 3306,
+      username: process.env.REACT_APP_MYSQL_USER,
+      password: process.env.REACT_APP_MYSQL_PASSWORD,
+      database: "tdr",
+      synchronize: true,
+      entities: [Collection, CollectionFiles]
+    });
+  }
 };
 
 const runHandler = (event, context, handler) =>
