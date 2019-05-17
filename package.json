@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "sls offline --port 8080",
     "generate": "graphql-codegen --config codegen.yml",
+    "deploy": "sls deploy",
     "debug": "node --inspect ./node_modules/.bin/serverless offline -s dev"
   },
   "dependencies": {
