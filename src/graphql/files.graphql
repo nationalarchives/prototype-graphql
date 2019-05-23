@@ -1,0 +1,31 @@
+type TdrCollectionFiles {
+  id: String
+  checksum: String
+  size: String
+  hasVirus: Boolean
+  checksumMatches: Boolean
+  path: String
+  lastModifiedDate: String
+}
+
+input TdrCollectionFilesInput {
+  id: String!
+  checksum: String!
+  size: String!
+  path: String!
+  lastModifiedDate: String!
+}
+
+type TdrCollectionFilesOutput {
+  files: [TdrCollectionFiles]
+}
+
+type TdrFileStatus {
+  virusScanComplete: Boolean
+  fileFormatCheckComplete: Boolean
+  checksumCheckComplete: Boolean
+}
+
+type TdrFilesStatus {
+  files: [TdrFileStatus]
+}

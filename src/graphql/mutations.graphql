@@ -4,4 +4,12 @@ type Mutation {
     collectionId: ID
     files: [TdrCollectionFilesInput]
   ): TdrCollectionFilesOutput
+
+  updateFileVirusCheckStatus(
+    fileId: ID
+    virusStatus: String
+  ): TdrCollectionFiles
+  updateFileChecksumStatus(fileId: ID, checksum: String): TdrCollectionFiles
+
+  createFileInfo(id: ID, input: TdrFileInfoInput): TdrFileInfo
 }

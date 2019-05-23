@@ -4,6 +4,7 @@ import { createConnection, getConnectionManager } from "typeorm";
 import { CollectionFiles } from "./entities/CollectionFiles";
 import { Collection } from "./entities/Collection";
 import { schema } from "./schema";
+import { FileTypeInfo } from "./entities/FileTypeInfo";
 
 const setupConnection: () => Promise<void> = async () => {
   if (getConnectionManager().connections.length === 0) {
@@ -15,7 +16,7 @@ const setupConnection: () => Promise<void> = async () => {
       password: process.env.REACT_APP_MYSQL_PASSWORD,
       database: "tdr",
       synchronize: true,
-      entities: [Collection, CollectionFiles]
+      entities: [Collection, CollectionFiles, FileTypeInfo]
     });
   }
 };
@@ -35,7 +36,7 @@ const run = async (event, context) => {
   });
   const handler = server.createHandler({
     cors: {
-      origin: "*",
+      origin: true,
       credentials: true
     }
   });

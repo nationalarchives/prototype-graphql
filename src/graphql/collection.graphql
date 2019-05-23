@@ -1,29 +1,9 @@
-type TdrCollectionFiles {
-  id: String
-  checksum: String
-  size: String
-  path: String
-  lastModifiedDate: String
-}
-
 type TdrCollection {
   id: String!
   name: String!
   copyright: String!
   closure: String!
   legalStatus: String!
-  files: [TdrCollectionFiles]
-}
-
-input TdrCollectionFilesInput {
-  id: String!
-  checksum: String!
-  size: String!
-  path: String!
-  lastModifiedDate: String!
-}
-
-type TdrCollectionFilesOutput {
   files: [TdrCollectionFiles]
 }
 
