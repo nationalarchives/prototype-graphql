@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 import { CollectionFiles } from "./CollectionFiles";
 
 @Entity("collection")
@@ -28,6 +35,12 @@ export class Collection {
 
   @Column({ name: "legal_status" })
   legalStatus: string;
+
+  @CreateDateColumn({ name: "date_created" })
+  createdDate: string;
+
+  @UpdateDateColumn({ name: "last_modified_date" })
+  lastModifiedDate: string;
 
   @OneToMany(_type => CollectionFiles, files => files.collection, {
     eager: true

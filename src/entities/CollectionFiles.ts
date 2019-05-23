@@ -1,5 +1,15 @@
-import { Entity, Column, PrimaryColumn, ManyToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
+  UpdateDateColumn,
+  CreateDateColumn
+} from "typeorm";
 import { Collection } from "./Collection";
+import { FileTypeInfo } from "./FileTypeInfo";
 
 @Entity("collection_files")
 export class CollectionFiles {
@@ -25,9 +35,22 @@ export class CollectionFiles {
   @Column()
   path: string;
 
-  @Column({ name: "last_modified_date" })
-  lastModifiedDate: string;
+  @Column({ name: "virus_status", nullable: true })
+  virusStatus?: string;
+
+  @Column({ name: "backend_checksum", nullable: true })
+  backendChecksum?: string;
+
+  @CreateDateColumn({ name: "date_created" })
+  createdDate?: string;
+
+  @UpdateDateColumn({ name: "last_modified_date" })
+  lastModifiedDate?: string;
 
   @ManyToOne(_type => Collection, collection => collection.files)
   collection?: Collection;
+
+  @OneToOne(_type => FileTypeInfo)
+  @JoinColumn({ name: "file_type_info_id" })
+  fileTypeInfo?: FileTypeInfo;
 }
