@@ -1,0 +1,14 @@
+type TdrFileInfo {
+  id: ID
+  format: String
+  mime: String
+  basis: String
+  warning: String
+}
+
+input TdrFileInfoInput {
+  format: String!
+  mime: String!
+  basis: String!
+  warning: String!
+}

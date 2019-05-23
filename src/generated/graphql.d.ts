@@ -11,6 +11,9 @@ export type Scalars = {
 export type Mutation = {
   createCollection?: Maybe<TdrCollection>;
   updateFilesOnCollection?: Maybe<TdrCollectionFilesOutput>;
+  updateFileVirusCheckStatus?: Maybe<TdrCollectionFiles>;
+  updateFileChecksumStatus?: Maybe<TdrCollectionFiles>;
+  createFileInfo?: Maybe<TdrFileInfo>;
 };
 
 export type MutationCreateCollectionArgs = {
@@ -22,11 +25,36 @@ export type MutationUpdateFilesOnCollectionArgs = {
   files?: Maybe<Array<Maybe<TdrCollectionFilesInput>>>;
 };
 
+export type MutationUpdateFileVirusCheckStatusArgs = {
+  fileId?: Maybe<Scalars["ID"]>;
+  virusStatus?: Maybe<Scalars["String"]>;
+};
+
+export type MutationUpdateFileChecksumStatusArgs = {
+  fileId?: Maybe<Scalars["ID"]>;
+  checksum?: Maybe<Scalars["String"]>;
+};
+
+export type MutationCreateFileInfoArgs = {
+  id?: Maybe<Scalars["ID"]>;
+  input?: Maybe<TdrFileInfoInput>;
+};
+
 export type Query = {
   getCollection?: Maybe<TdrCollection>;
+  getFiles?: Maybe<TdrCollectionFiles>;
+  getFilesStatus?: Maybe<TdrFilesStatus>;
 };
 
 export type QueryGetCollectionArgs = {
+  id: Scalars["ID"];
+};
+
+export type QueryGetFilesArgs = {
+  collectionId: Scalars["ID"];
+};
+
+export type QueryGetFilesStatusArgs = {
   id: Scalars["ID"];
 };
 
@@ -43,6 +71,8 @@ export type TdrCollectionFiles = {
   id?: Maybe<Scalars["String"]>;
   checksum?: Maybe<Scalars["String"]>;
   size?: Maybe<Scalars["String"]>;
+  hasVirus?: Maybe<Scalars["Boolean"]>;
+  checksumMatches?: Maybe<Scalars["Boolean"]>;
   path?: Maybe<Scalars["String"]>;
   lastModifiedDate?: Maybe<Scalars["String"]>;
 };
@@ -64,6 +94,31 @@ export type TdrCollectionInput = {
   copyright: Scalars["String"];
   closure: Scalars["String"];
   legalStatus: Scalars["String"];
+};
+
+export type TdrFileInfo = {
+  id?: Maybe<Scalars["ID"]>;
+  format?: Maybe<Scalars["String"]>;
+  mime?: Maybe<Scalars["String"]>;
+  basis?: Maybe<Scalars["String"]>;
+  warning?: Maybe<Scalars["String"]>;
+};
+
+export type TdrFileInfoInput = {
+  format: Scalars["String"];
+  mime: Scalars["String"];
+  basis: Scalars["String"];
+  warning: Scalars["String"];
+};
+
+export type TdrFilesStatus = {
+  files?: Maybe<Array<Maybe<TdrFileStatus>>>;
+};
+
+export type TdrFileStatus = {
+  virusScanComplete?: Maybe<Scalars["Boolean"]>;
+  fileFormatCheckComplete?: Maybe<Scalars["Boolean"]>;
+  checksumCheckComplete?: Maybe<Scalars["Boolean"]>;
 };
 import { IGraphQLContext } from "../context";
 
@@ -148,11 +203,15 @@ export type ResolversTypes = ResolversObject<{
   TdrCollection: TdrCollection;
   String: Scalars["String"];
   TdrCollectionFiles: TdrCollectionFiles;
+  Boolean: Scalars["Boolean"];
+  TdrFilesStatus: TdrFilesStatus;
+  TdrFileStatus: TdrFileStatus;
   Mutation: {};
   TdrCollectionInput: TdrCollectionInput;
   TdrCollectionFilesInput: TdrCollectionFilesInput;
   TdrCollectionFilesOutput: TdrCollectionFilesOutput;
-  Boolean: Scalars["Boolean"];
+  TdrFileInfoInput: TdrFileInfoInput;
+  TdrFileInfo: TdrFileInfo;
 }>;
 
 export type MutationResolvers<
@@ -171,6 +230,24 @@ export type MutationResolvers<
     ContextType,
     MutationUpdateFilesOnCollectionArgs
   >;
+  updateFileVirusCheckStatus?: Resolver<
+    Maybe<ResolversTypes["TdrCollectionFiles"]>,
+    ParentType,
+    ContextType,
+    MutationUpdateFileVirusCheckStatusArgs
+  >;
+  updateFileChecksumStatus?: Resolver<
+    Maybe<ResolversTypes["TdrCollectionFiles"]>,
+    ParentType,
+    ContextType,
+    MutationUpdateFileChecksumStatusArgs
+  >;
+  createFileInfo?: Resolver<
+    Maybe<ResolversTypes["TdrFileInfo"]>,
+    ParentType,
+    ContextType,
+    MutationCreateFileInfoArgs
+  >;
 }>;
 
 export type QueryResolvers<
@@ -182,6 +259,18 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     QueryGetCollectionArgs
+  >;
+  getFiles?: Resolver<
+    Maybe<ResolversTypes["TdrCollectionFiles"]>,
+    ParentType,
+    ContextType,
+    QueryGetFilesArgs
+  >;
+  getFilesStatus?: Resolver<
+    Maybe<ResolversTypes["TdrFilesStatus"]>,
+    ParentType,
+    ContextType,
+    QueryGetFilesStatusArgs
   >;
 }>;
 
@@ -208,6 +297,16 @@ export type TdrCollectionFilesResolvers<
   id?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   checksum?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   size?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  hasVirus?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType
+  >;
+  checksumMatches?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType
+  >;
   path?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   lastModifiedDate?: Resolver<
     Maybe<ResolversTypes["String"]>,
@@ -227,12 +326,58 @@ export type TdrCollectionFilesOutputResolvers<
   >;
 }>;
 
+export type TdrFileInfoResolvers<
+  ContextType = IGraphQLContext,
+  ParentType = ResolversTypes["TdrFileInfo"]
+> = ResolversObject<{
+  id?: Resolver<Maybe<ResolversTypes["ID"]>, ParentType, ContextType>;
+  format?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  mime?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  basis?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  warning?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+}>;
+
+export type TdrFilesStatusResolvers<
+  ContextType = IGraphQLContext,
+  ParentType = ResolversTypes["TdrFilesStatus"]
+> = ResolversObject<{
+  files?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["TdrFileStatus"]>>>,
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type TdrFileStatusResolvers<
+  ContextType = IGraphQLContext,
+  ParentType = ResolversTypes["TdrFileStatus"]
+> = ResolversObject<{
+  virusScanComplete?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType
+  >;
+  fileFormatCheckComplete?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType
+  >;
+  checksumCheckComplete?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType
+  >;
+}>;
+
 export type Resolvers<ContextType = IGraphQLContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   TdrCollection?: TdrCollectionResolvers<ContextType>;
   TdrCollectionFiles?: TdrCollectionFilesResolvers<ContextType>;
   TdrCollectionFilesOutput?: TdrCollectionFilesOutputResolvers<ContextType>;
+  TdrFileInfo?: TdrFileInfoResolvers<ContextType>;
+  TdrFilesStatus?: TdrFilesStatusResolvers<ContextType>;
+  TdrFileStatus?: TdrFileStatusResolvers<ContextType>;
 }>;
 
 /**
