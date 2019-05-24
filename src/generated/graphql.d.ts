@@ -24,10 +24,16 @@ export type MutationUpdateFilesOnCollectionArgs = {
 
 export type Query = {
   getCollection?: Maybe<TdrCollection>;
+  getCollections?: Maybe<Array<Maybe<TdrCollection>>>;
 };
 
 export type QueryGetCollectionArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryGetCollectionsArgs = {
+  offset?: Maybe<Scalars["Int"]>;
+  limit?: Maybe<Scalars["Int"]>;
 };
 
 export type TdrCollection = {
@@ -148,6 +154,7 @@ export type ResolversTypes = ResolversObject<{
   TdrCollection: TdrCollection;
   String: Scalars["String"];
   TdrCollectionFiles: TdrCollectionFiles;
+  Int: Scalars["Int"];
   Mutation: {};
   TdrCollectionInput: TdrCollectionInput;
   TdrCollectionFilesInput: TdrCollectionFilesInput;
@@ -182,6 +189,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     QueryGetCollectionArgs
+  >;
+  getCollections?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["TdrCollection"]>>>,
+    ParentType,
+    ContextType,
+    QueryGetCollectionsArgs
   >;
 }>;
 
