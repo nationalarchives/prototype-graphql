@@ -3,7 +3,6 @@ service:
 
 # Add the serverless-webpack plugin
 plugins:
-  - serverless-offline-ssm
   - serverless-webpack
   - serverless-offline
 
@@ -21,12 +20,12 @@ functions:
           method: post
           path: graphql
           cors: true
-          authorizer:aws sam.
+          authorizer:
             arn: arn:aws:cognito-idp:eu-west-2:247222723249:userpool/eu-west-2_6Mn0M2i9C
     environment:
-      REACT_APP_MYSQL_HOST: 127.0.0.1
-      REACT_APP_MYSQL_USER: root
-      REACT_APP_MYSQL_PASSWORD: password
+      REACT_APP_MYSQL_HOST: ${ssm:mysqlhost}
+      REACT_APP_MYSQL_USER: ${ssm:mysqluser}
+      REACT_APP_MYSQL_PASSWORD: ${ssm:mysqlpassword}
     vpc:
       securityGroupIds:
         - sg-c24e48a8

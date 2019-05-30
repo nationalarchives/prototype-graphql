@@ -36,7 +36,7 @@ const run = async (event, context) => {
   });
   const handler = server.createHandler({
     cors: {
-      origin: "*",
+      origin: true,
       credentials: true
     }
   });
