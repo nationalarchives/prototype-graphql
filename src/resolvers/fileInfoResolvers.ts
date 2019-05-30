@@ -5,6 +5,15 @@ import uuid4 from "uuid";
 import { CollectionFiles } from "../entities/CollectionFiles";
 
 const fileInfoResolver: IResolvers = {
+  Query: {
+    getFileInfo: async (_, args, _context): Promise<TdrFileInfo> => {
+      const { fileId } = args;
+      const collectionFile: CollectionFiles = await getRepository(
+        CollectionFiles
+      ).findOne({ id: fileId });
+      return collectionFile.fileTypeInfo;
+    }
+  },
   Mutation: {
     createFileInfo: async (_, args, _context): Promise<TdrFileInfo> => {
       const { id, input } = args;

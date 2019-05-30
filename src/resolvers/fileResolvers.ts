@@ -24,7 +24,11 @@ const fileResolver: IResolvers = {
       const files: TdrFileStatus[] = await Promise.all(
         collectionFiles.map(async file => {
           const fileTypeInfo: FileTypeInfo = await file.fileTypeInfo;
-          console.log(fileTypeInfo ? fileTypeInfo.id : null);
+          console.log(
+            `file id ${file.id} file type id ${
+              fileTypeInfo ? fileTypeInfo.id : null
+            }`
+          );
           return {
             fileName: file.path,
             virusScanComplete: isSet(file.virusStatus),
@@ -35,11 +39,11 @@ const fileResolver: IResolvers = {
       );
       return { name: collection.name, files };
     },
-    getFiles: async (_, args, _context): Promise<TdrCollectionFiles> => {
+    getFiles: async (_, args, _context): Promise<TdrCollectionFiles[]> => {
       const collection: Collection = await getRepository(Collection).findOne({
         id: args.collectionId
       });
-      return await getRepository(CollectionFiles).findOne({ collection });
+      return await getRepository(CollectionFiles).find({ collection });
     }
   },
   Mutation: {

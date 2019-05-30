@@ -11,6 +11,7 @@ type TdrCollectionFiles {
 input TdrCollectionFilesInput {
   id: String!
   checksum: String!
+  fileName: String!
   size: String!
   path: String!
   lastModifiedDate: String!

@@ -1,7 +1,4 @@
-import { GraphQLResolveInfo } from "graphql";
-import { IGraphQLContext } from "../context";
 export type Maybe<T> = T | null;
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -12,7 +9,6 @@ export type Scalars = {
 };
 
 export type Mutation = {
-  __typename?: "Mutation";
   createCollection?: Maybe<TdrCollection>;
   updateFilesOnCollection?: Maybe<TdrCollectionFilesOutput>;
   updateFileVirusCheckStatus?: Maybe<TdrCollectionFiles>;
@@ -45,10 +41,10 @@ export type MutationCreateFileInfoArgs = {
 };
 
 export type Query = {
-  __typename?: "Query";
   getCollection?: Maybe<TdrCollection>;
-  getFiles?: Maybe<TdrCollectionFiles>;
+  getFiles?: Maybe<Array<Maybe<TdrCollectionFiles>>>;
   getFilesStatus?: Maybe<TdrFilesStatus>;
+  getFileInfo?: Maybe<TdrFileInfo>;
   getCollections?: Maybe<Array<Maybe<TdrCollection>>>;
 };
 
@@ -64,13 +60,16 @@ export type QueryGetFilesStatusArgs = {
   collectionId: Scalars["ID"];
 };
 
+export type QueryGetFileInfoArgs = {
+  fileId?: Maybe<Scalars["ID"]>;
+};
+
 export type QueryGetCollectionsArgs = {
   offset?: Maybe<Scalars["Int"]>;
   limit?: Maybe<Scalars["Int"]>;
 };
 
 export type TdrCollection = {
-  __typename?: "TdrCollection";
   id: Scalars["String"];
   name: Scalars["String"];
   copyright: Scalars["String"];
@@ -80,7 +79,6 @@ export type TdrCollection = {
 };
 
 export type TdrCollectionFiles = {
-  __typename?: "TdrCollectionFiles";
   id?: Maybe<Scalars["String"]>;
   checksum?: Maybe<Scalars["String"]>;
   size?: Maybe<Scalars["String"]>;
@@ -93,13 +91,13 @@ export type TdrCollectionFiles = {
 export type TdrCollectionFilesInput = {
   id: Scalars["String"];
   checksum: Scalars["String"];
+  fileName: Scalars["String"];
   size: Scalars["String"];
   path: Scalars["String"];
   lastModifiedDate: Scalars["String"];
 };
 
 export type TdrCollectionFilesOutput = {
-  __typename?: "TdrCollectionFilesOutput";
   files?: Maybe<Array<Maybe<TdrCollectionFiles>>>;
 };
 
@@ -111,7 +109,6 @@ export type TdrCollectionInput = {
 };
 
 export type TdrFileInfo = {
-  __typename?: "TdrFileInfo";
   id?: Maybe<Scalars["ID"]>;
   format?: Maybe<Scalars["String"]>;
   mime?: Maybe<Scalars["String"]>;
@@ -127,18 +124,22 @@ export type TdrFileInfoInput = {
 };
 
 export type TdrFilesStatus = {
-  __typename?: "TdrFilesStatus";
   name: Scalars["String"];
   files?: Maybe<Array<Maybe<TdrFileStatus>>>;
 };
 
 export type TdrFileStatus = {
-  __typename?: "TdrFileStatus";
   fileName: Scalars["String"];
   virusScanComplete?: Maybe<Scalars["Boolean"]>;
   fileFormatCheckComplete?: Maybe<Scalars["Boolean"]>;
   checksumCheckComplete?: Maybe<Scalars["Boolean"]>;
 };
+import { IGraphQLContext } from "../context";
+
+import { GraphQLResolveInfo } from "graphql";
+
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
@@ -219,13 +220,13 @@ export type ResolversTypes = ResolversObject<{
   Boolean: Scalars["Boolean"];
   TdrFilesStatus: TdrFilesStatus;
   TdrFileStatus: TdrFileStatus;
+  TdrFileInfo: TdrFileInfo;
   Int: Scalars["Int"];
   Mutation: {};
   TdrCollectionInput: TdrCollectionInput;
   TdrCollectionFilesInput: TdrCollectionFilesInput;
   TdrCollectionFilesOutput: TdrCollectionFilesOutput;
   TdrFileInfoInput: TdrFileInfoInput;
-  TdrFileInfo: TdrFileInfo;
 }>;
 
 export type MutationResolvers<
@@ -275,7 +276,7 @@ export type QueryResolvers<
     QueryGetCollectionArgs
   >;
   getFiles?: Resolver<
-    Maybe<ResolversTypes["TdrCollectionFiles"]>,
+    Maybe<Array<Maybe<ResolversTypes["TdrCollectionFiles"]>>>,
     ParentType,
     ContextType,
     QueryGetFilesArgs
@@ -285,6 +286,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     QueryGetFilesStatusArgs
+  >;
+  getFileInfo?: Resolver<
+    Maybe<ResolversTypes["TdrFileInfo"]>,
+    ParentType,
+    ContextType,
+    QueryGetFileInfoArgs
   >;
   getCollections?: Resolver<
     Maybe<Array<Maybe<ResolversTypes["TdrCollection"]>>>,
