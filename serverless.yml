@@ -22,6 +22,13 @@ functions:
           cors: true
           authorizer:
             arn: arn:aws:cognito-idp:eu-west-2:247222723249:userpool/eu-west-2_6Mn0M2i9C
+      - http:
+          method: post
+          path: validate
+          authorizer:
+            arn: arn:aws:cognito-idp:eu-west-2:247222723249:userpool/eu-west-2_6Mn0M2i9C
+          authorizationScopes:
+            - tdr/validate
     environment:
       REACT_APP_MYSQL_HOST: ${ssm:mysqlhost}
       REACT_APP_MYSQL_USER: ${ssm:mysqluser}
@@ -33,3 +40,10 @@ functions:
         - subnet-8bc567f1
         - subnet-866701ef
         - subnet-d024d59c
+resources:
+  Resources:
+    ApiGatewayMethodValidatePost:
+      Type: "AWS::ApiGateway::Method"
+      Properties:
+        AuthorizationScopes:
+          - "tdr/validate"
