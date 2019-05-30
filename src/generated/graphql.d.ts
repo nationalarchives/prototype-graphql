@@ -61,7 +61,7 @@ export type QueryGetFilesArgs = {
 };
 
 export type QueryGetFilesStatusArgs = {
-  id: Scalars["ID"];
+  collectionId: Scalars["ID"];
 };
 
 export type QueryGetCollectionsArgs = {
@@ -128,11 +128,13 @@ export type TdrFileInfoInput = {
 
 export type TdrFilesStatus = {
   __typename?: "TdrFilesStatus";
+  name: Scalars["String"];
   files?: Maybe<Array<Maybe<TdrFileStatus>>>;
 };
 
 export type TdrFileStatus = {
   __typename?: "TdrFileStatus";
+  fileName: Scalars["String"];
   virusScanComplete?: Maybe<Scalars["Boolean"]>;
   fileFormatCheckComplete?: Maybe<Scalars["Boolean"]>;
   checksumCheckComplete?: Maybe<Scalars["Boolean"]>;
@@ -359,6 +361,7 @@ export type TdrFilesStatusResolvers<
   ContextType = IGraphQLContext,
   ParentType = ResolversTypes["TdrFilesStatus"]
 > = ResolversObject<{
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   files?: Resolver<
     Maybe<Array<Maybe<ResolversTypes["TdrFileStatus"]>>>,
     ParentType,
@@ -370,6 +373,7 @@ export type TdrFileStatusResolvers<
   ContextType = IGraphQLContext,
   ParentType = ResolversTypes["TdrFileStatus"]
 > = ResolversObject<{
+  fileName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   virusScanComplete?: Resolver<
     Maybe<ResolversTypes["Boolean"]>,
     ParentType,

@@ -8,23 +8,32 @@ import {
 import { getRepository, Repository } from "typeorm";
 import { CollectionFiles } from "../entities/CollectionFiles";
 import { Collection } from "../entities/Collection";
+import { FileTypeInfo } from "../entities/FileTypeInfo";
 
 const fileResolver: IResolvers = {
   Query: {
     getFilesStatus: async (_, args, _context): Promise<TdrFilesStatus> => {
-      const { id } = args;
+      const { collectionId } = args;
       const collection: Collection = await getRepository(Collection).findOne({
-        id
+        id: collectionId
       });
       const isSet: (check: string) => boolean = check => {
-        return check !== undefined && check.length > 0;
+        return check && check.length > 0;
       };
-      const files: TdrFileStatus[] = collection.files.map(file => ({
-        virusScanComplete: isSet(file.virusStatus),
-        checksumCheckComplete: isSet(file.backendChecksum),
-        fileFormatCheckComplete: file.fileTypeInfo !== undefined
-      }));
-      return { files };
+      const collectionFiles: CollectionFiles[] = await collection.files;
+      const files: TdrFileStatus[] = await Promise.all(
+        collectionFiles.map(async file => {
+          const fileTypeInfo: FileTypeInfo = await file.fileTypeInfo;
+          console.log(fileTypeInfo ? fileTypeInfo.id : null);
+          return {
+            fileName: file.path,
+            virusScanComplete: isSet(file.virusStatus),
+            checksumCheckComplete: isSet(file.backendChecksum),
+            fileFormatCheckComplete: fileTypeInfo !== null
+          };
+        })
+      );
+      return { name: collection.name, files };
     },
     getFiles: async (_, args, _context): Promise<TdrCollectionFiles> => {
       const collection: Collection = await getRepository(Collection).findOne({

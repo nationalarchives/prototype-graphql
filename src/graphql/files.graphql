@@ -21,11 +21,13 @@ type TdrCollectionFilesOutput {
 }
 
 type TdrFileStatus {
+  fileName: String!
   virusScanComplete: Boolean
   fileFormatCheckComplete: Boolean
   checksumCheckComplete: Boolean
 }
 
 type TdrFilesStatus {
+  name: String!
   files: [TdrFileStatus]
 }

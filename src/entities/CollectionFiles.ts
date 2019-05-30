@@ -50,7 +50,7 @@ export class CollectionFiles {
   @ManyToOne(_type => Collection, collection => collection.files)
   collection?: Collection;
 
-  @OneToOne(_type => FileTypeInfo)
+  @OneToOne(_type => FileTypeInfo, { eager: true })
   @JoinColumn({ name: "file_type_info_id" })
   fileTypeInfo?: FileTypeInfo;
 }
