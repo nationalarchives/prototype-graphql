@@ -2,4 +2,5 @@ type Query {
   getCollection(id: ID!): TdrCollection
   getFiles(collectionId: ID!): TdrCollectionFiles
   getFilesStatus(id: ID!): TdrFilesStatus
+  getCollections(offset: Int, limit: Int): [TdrCollection]
 }

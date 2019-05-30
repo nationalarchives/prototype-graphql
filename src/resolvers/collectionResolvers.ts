@@ -7,6 +7,12 @@ const collectionResolver: IResolvers = {
   Query: {
     getCollection: async (_, args, _context): Promise<Collection> => {
       return getRepository(Collection).findOne({ id: args.id });
+    },
+    getCollections: async (_, args, _context): Promise<Collection[]> => {
+      return getRepository(Collection).find({
+        skip: args.offset,
+        take: args.limit
+      });
     }
   },
   Mutation: {
