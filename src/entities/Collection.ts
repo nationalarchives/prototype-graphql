@@ -37,10 +37,10 @@ export class Collection {
   legalStatus: string;
 
   @CreateDateColumn({ name: "date_created" })
-  createdDate: string;
+  createdDate?: string;
 
   @UpdateDateColumn({ name: "last_modified_date" })
-  lastModifiedDate: string;
+  lastModifiedDate?: string;
 
   @OneToMany(_type => CollectionFiles, files => files.collection, {
     eager: true
