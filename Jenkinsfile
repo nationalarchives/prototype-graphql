@@ -9,7 +9,7 @@ pipeline{
         stage("Run containers"){
             steps{
                 sh "/usr/local/bin/docker-compose up -d mysql"
-                sh "/usr/local/bin/docker-compose up graphql"
+                sh "/usr/local/bin/docker-compose up --exit-code-from graphql graphql"
             }            
         }
 
