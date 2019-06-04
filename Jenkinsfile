@@ -7,6 +7,12 @@ pipeline{
                 sh "docker-compose up graphql"
             }            
         }
+
+        stage("Remove containers") {
+            steps {
+                sh "docker-compose down"
+            }
+        }
     }
     
 }
