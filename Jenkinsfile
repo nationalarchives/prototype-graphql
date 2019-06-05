@@ -18,6 +18,12 @@ pipeline{
                 sh "/usr/local/bin/docker-compose down"
             }
         }
+
+        stage("Copy junit xml report") {
+            steps {
+                sh "docker cp graphql:/tdr-graphql/junit.xml ."
+            }
+        }
     }
     post {
         always {
