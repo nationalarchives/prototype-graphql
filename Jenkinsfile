@@ -6,6 +6,13 @@ pipeline{
                 checkout(scm)
             }
         }
+
+        stage("Build containers") {
+            steps {
+                sh "docker-compose build"
+            }
+        }
+
         stage("Run containers"){
             steps{
                 sh "/usr/local/bin/docker-compose up -d mysql"
