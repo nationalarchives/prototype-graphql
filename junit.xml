@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" time="1.348">
+  <testsuite name="collection mutations" errors="0" failures="0" skipped="0" timestamp="2019-06-05T07:48:33" time="1.328" tests="1">
+    <testcase classname="collection mutations get collection returns a collection if one exists" name="collection mutations get collection returns a collection if one exists" time="0.066">
+    </testcase>
+  </testsuite>
+</testsuites>

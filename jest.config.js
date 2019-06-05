@@ -4,5 +4,6 @@ module.exports = {
   transform: {
     "\\.(gql|graphql)$": "jest-transform-graphql",
     ".*": "ts-jest"
-  }
+  },
+  reporters: ["default", "jest-junit"]
 };
