@@ -1,0 +1,47 @@
+pipeline {
+    agent {
+        dockerfile {
+            args '-u root:root'
+            filename 'Dockerfile-release'
+        }
+    }
+    parameters {
+         choice(name: 'VERSION', choices: ['patch', 'major', 'minor'], description: 'Semver version')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout(scm)
+            }
+        }
+        
+        stage('Install') {
+            steps {
+                sh('yarn')
+            }
+        }
+
+        stage('Version and deploy') {
+            steps {
+                sh 'git config user.name "Sam Palmer"'
+                sh 'git config user.email "github@sampalmer.dev"'
+                sh 'git checkout master'
+                sh 'git pull'
+                sh("yarn version --${params.VERSION}")
+
+                withCredentials([
+                    usernamePassword(credentialsId: 'TDRGithub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD'),
+                    usernamePassword(credentialsId: 'TDRAWS', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
+                    ]) {
+                    sh 'node_modules/.bin/serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY'
+                    sh 'git push --follow-tags https://$USERNAME:$PASSWORD@github.com/nationalarchives/tdr-front-end.git master'
+                    sh('yarn deploy')
+                    script {
+                        version = sh(script: "grep version package.json | head -1 | awk -F\\\" '{print \$4}'", returnStdout: true)
+                        echo version
+                    }
+                }
+            }
+        }
+    }
+}
