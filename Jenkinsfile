@@ -6,6 +6,13 @@ pipeline{
                 checkout(scm)
             }
         }
+
+        stage("Build containers") {
+            steps {
+                sh "/usr/local/bin/docker-compose build"
+            }
+        }
+
         stage("Run containers"){
             steps{
                 sh "/usr/local/bin/docker-compose up -d mysql"
@@ -13,10 +20,21 @@ pipeline{
             }            
         }
 
+        stage("Copy junit xml report") {
+            steps {
+                sh "docker cp graphql:/tdr-graphql/junit.xml ."
+            }
+        }
+
         stage("Remove containers") {
             steps {
                 sh "/usr/local/bin/docker-compose down"
             }
+        }
+    }
+    post {
+        always {
+            junit 'junit.xml'
         }
     }
     
