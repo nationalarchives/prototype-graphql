@@ -38,8 +38,9 @@ pipeline {
                     sh('yarn deploy')
                     script {
                         version = sh(script: "grep version package.json | head -1 | awk -F\\\" '{print \$4}'", returnStdout: true)
-                        echo version
-                    }
+                        version = version.trim()
+                        slackSend color: 'good', message: "TDR graphql server version ${version} has been released :party-dinosaur:"
+                    } 
                 }
             }
         }
