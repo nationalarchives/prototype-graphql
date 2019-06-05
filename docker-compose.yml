@@ -3,6 +3,7 @@ services:
   graphql:
     build: .
     image: graphql
+    container_name: graphql
     depends_on:
       - mysql
   mysql:
